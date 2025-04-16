@@ -26,7 +26,7 @@ contract MinimalAccount is IAccount, Ownable {
         _;
     }
 
-    modifier requireFromEntryPointOwner() {
+    modifier requireFromEntryPointOr3Owner() {
         if (msg.sender != address(i_entryPoint) && msg.sender != owner()) {
             revert MinimalAccount__NotFromEntryPointOrOwner();
         }
@@ -43,7 +43,7 @@ contract MinimalAccount is IAccount, Ownable {
 
     // EXTERNAL FUNCTIONS
 
-    function execute(address dest, uint256 value, bytes calldata functionData) external requireFromEntryPointOwner {
+    function execute(address dest, uint256 value, bytes calldata functionData) external requireFromEntryPointOrOwner {
         (bool success, bytes memory result) = dest.call{value: value}(functionData);
         if (!success) {
             revert MinimalAccount__CallFailed(result);
